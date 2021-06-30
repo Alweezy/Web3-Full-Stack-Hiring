@@ -20,29 +20,24 @@ class Converter extends React.Component {
         this.handleConvert = this.handleConvert.bind(this)
     }
 
-    componentDidMount() {
-        axios
-            .get(`https://openexchangerates.org/api/currencies.json`)
-            .then(response => {
-                const currencyAr = [];
+    async componentDidMount() {
+        try {
+            const {data} = await axios.get(`https://openexchangerates.org/api/currencies.json`)
+            const currencyAr = [];
+            for(const key in data) {
+                currencyAr.push(key);
+            }
+            this.setState({ currencies: currencyAr });
+        } catch (error) {
+            console.error(`Error: There was a problem fetching currencies: ${error}`)
+        }
 
-                for (const key in response.data) {
-                    currencyAr.push(key);
-                }
-                this.setState({ currencies: currencyAr });
-            })
-            .catch(error => {
-                console.error(`Error: There was a problem fetching currencies: ${error}`);
-            });
-
-        axios
-            .get(`https://openexchangerates.org/api/latest.json?app_id=${this.OEXRatesappId}`)
-            .then(response => {
-                this.setState ({rates: response.data.rates})
-            })
-            .catch(error => {
-                console.error(`Error: There was a problem fetching current rates: ${error}`);
-            });
+        try {
+            const {data: exChange } = await axios.get(`https://openexchangerates.org/api/latest.json?app_id=${this.OEXRatesappId}`)
+            this.setState({rates: exChange.rates})
+        } catch (error) {
+            console.error(`Error: There was a problem fetching current rates: ${error}`);
+        }
     }
 
     handleConvert = (data) => {

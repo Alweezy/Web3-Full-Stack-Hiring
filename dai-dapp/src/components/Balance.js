@@ -29,10 +29,9 @@ class Balance extends React.Component {
         try {
             const provider = new Web3.providers.HttpProvider(gateWayUrl)
             const web3 = new Web3(provider);
-            const daiContractAddress = "0x6b175474e89094c44da98b954eedeac495271d0f";
-            const daiContract = new web3.eth.Contract(daiABI, daiContractAddress);
-            // const daiWhale = "0xF977814e90dA44bFA03b6295A0616a897441aceC";
-            const daiWalletAddress = this.state.address;
+            const daiContractAddress = "0x6b175474e89094c44da98b954eedeac495271d0f"
+            const daiContract = new web3.eth.Contract(daiABI, daiContractAddress)
+            const daiWalletAddress = this.state.address
             const daiBalance = await daiContract.methods.balanceOf(daiWalletAddress).call()
             this.setState({balance:  web3.utils.fromWei(daiBalance, 'ether')})
             this.setState({errorMessage: ''})
