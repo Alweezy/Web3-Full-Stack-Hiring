@@ -5,8 +5,8 @@ const { BN, ether, balance } = require('@openzeppelin/test-helpers');
 // Use https://github.com/indutny/bn.js/
 Bank.numberFormat = "BN";
 // ABIs are from https://github.com/ryanio/truffle-mint-dai/tree/master/test/abi
-const daiABI = require("./abi/dai");
-const usdcABI = require("./abi/erc20");
+const daiABI = require("./dai-dapp/src/abi/dai");
+const usdcABI = require("./dai-dapp/src/abi/erc20");
 
 const daiContractAddress = "0x6b175474e89094c44da98b954eedeac495271d0f";
 const daiContract = new web3.eth.Contract(daiABI, daiContractAddress);
@@ -195,7 +195,7 @@ contract("Bank", function (accounts) {
     let bankFeeBalanceAfterWithdrawal = new BN(await daiContract.methods.balanceOf(bankFeeAddress).call());
     console.log(`bankBalanceAfterWithdrawal: ${bankBalanceAfterWithdrawal} bankUserDaiBalanceAfterWithdrawal: ${bankUserDaiBalanceAfterWithdrawal} bankFeeBalanceAfterWithdrawal: ${bankFeeBalanceAfterWithdrawal} amountToWithdraw:${`amountToWithdraw`}`);
 
-    // Check both the DAI balances and the bank balances to ensure that the user 
+    // Check both the DAI balances and the bank balances to ensure that the user
     // and the bank fee address properly received the DAI
     expect(bankBalanceAfterWithdrawal).to.be.bignumber.to.equal(bankBalanceBeforeWithdrawal.sub(amountToWithdraw));
     // TODO: This test needs to be fixed using the same methods as the fee calculation, since BN.js does not support decimals
