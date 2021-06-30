@@ -36,7 +36,8 @@ class Balance extends React.Component {
             this.setState({balance:  web3.utils.fromWei(daiBalance, 'ether')})
             this.setState({errorMessage: ''})
         } catch (error) {
-            this.setState({errorMessage: error.message})
+            const errorMessage = error.code === 'INVALID_ARGUMENT' ? 'Ensure address is valid and try again' : error.message
+            this.setState({errorMessage: errorMessage})
         }
     }
 
@@ -84,7 +85,6 @@ class Balance extends React.Component {
                 <input placeholder="eg  0x28C6c0..." style={this.inputStyles} id="address" type="text" onChange={ this.handleInPutChanged} value={this.state.address}/>
                 <button style={this.buttonStyles} onClick={this.checkBalance} type="button">CHECK BALANCE</button>
                 <Converter balance={this.state.balance}/>
-                {this.state.balance && <h4 style={{color: "white"}}>Last Queried Address: {this.state.address}</h4>}
             </div>
         )
     }
