@@ -3,7 +3,7 @@ import axios from "axios";
 
 import NumberFormat from 'react-number-format';
 
-import converter from "./styles/converter.css";
+import "./styles/converter.css";
 class Converter extends React.Component {
     constructor(props) {
         super(props);
@@ -41,10 +41,8 @@ class Converter extends React.Component {
     }
 
     handleConvert = (data) => {
-        if (this.state.fromCurrency !== data) {
-            const newRate = this.state.rates[data]
-            this.setState({foreignRate : newRate})
-        }
+        const newRate = this.state.rates[data]
+        this.setState({foreignRate : newRate})
     };
     handleSelect = event => {
         this.setState({ toCurrency: event.target.value });

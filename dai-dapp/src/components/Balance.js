@@ -2,6 +2,8 @@ import React from 'react'
 import Web3 from 'web3'
 import daiABI from './../abi/dai'
 import Converter from './Converter'
+import {Button} from 'react-bootstrap'
+
 
 const gateWayUrl = 'https://mainnet.infura.io/v3/5589b5c0d0804cdb831a3d5c44fada90'
 
@@ -9,9 +11,9 @@ class Balance extends React.Component {
     constructor (props) {
         super(props)
         this.state = {
-            balance: '',
-            address: '',
-            errorMessage: ''
+            balance: null,
+            address: null,
+            errorMessage: null
         }
 
         this.checkBalance = this.checkBalance.bind(this)
@@ -26,6 +28,7 @@ class Balance extends React.Component {
     }
 
     async checkBalance () {
+        this.setState({balance: null})
         try {
             const provider = new Web3.providers.HttpProvider(gateWayUrl)
             const web3 = new Web3(provider);
@@ -41,51 +44,25 @@ class Balance extends React.Component {
         }
     }
 
-
-    inputStyles = {
-        backgroundColor: "#005A9C",
-        color: "white",
-        marginTop: "20px",
-        width: "90%",
-        height: "40px",
-        fontSize: "22px"
-    }
-
-    buttonStyles = {
-        marginTop:"50px",
-        padding: "10px",
-        borderRadius: "10px",
-        backgroundColor: "Blue",
-        font: "Roboto",
-        color: "white",
-    }
-
-    labelStyles = {
-        marginTop: "20px",
-        fontSize: "30px"
-    }
-
-    errorMessageStyles =  {
-        color: "red",
-        width: "90%",
-        marginLeft: "10px",
-        padding: "20px",
-        backgroundColor: "white",
-        border: "2px solid white",
-        font: "Roboto"
-    }
-
     render(){
         return (
-            <div>
-                {this.state.errorMessage && <p style={this.errorMessageStyles}>{this.state.errorMessage}</p>}
-                <div style={this.labelStyles}>
-                    {!this.state.address && <label htmlFor="address">ENTER ADDRESS BELOW:</label>}
+            <form>
+                {this.state.errorMessage && <div className="alert alert-danger" role="alert">{this.state.errorMessage}</div>}
+                <label htmlFor="address">Enter Wallet Address and hit search</label>
+                <div className="input-group mb-3">
+                    <input onChange={this.handleInPutChanged} id="address" type="text" className="form-control" placeholder="eg 0xd77..."
+                           aria-label="Enter Wallet Address and hit search" aria-describedby="basic-addon2"/>
+                        <div className="input-group-append">
+                            <button onClick={this.checkBalance} className="btn btn-outline-primary" type="button">Search</button>
+                        </div>
                 </div>
-                <input placeholder="eg  0x28C6c0..." style={this.inputStyles} id="address" type="text" onChange={ this.handleInPutChanged} value={this.state.address}/>
-                <button style={this.buttonStyles} onClick={this.checkBalance} type="button">CHECK BALANCE</button>
-                <Converter balance={this.state.balance}/>
-            </div>
+                {(!this.state.balance ) && <div className="d-flex justify-content-center">
+                    <div className="spinner-border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                </div>}
+                {this.state.balance && <Converter balance={this.state.balance}/>}
+            </form>
         )
     }
 }
