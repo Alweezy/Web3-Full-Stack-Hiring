@@ -2,8 +2,6 @@ import React from 'react'
 import Web3 from 'web3'
 import daiABI from './../abi/dai'
 import Converter from './Converter'
-import {Button} from 'react-bootstrap'
-
 
 const gateWayUrl = 'https://mainnet.infura.io/v3/5589b5c0d0804cdb831a3d5c44fada90'
 
