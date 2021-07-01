@@ -13,7 +13,8 @@ class Balance extends React.Component {
         this.state = {
             balance: null,
             address: null,
-            errorMessage: null
+            errorMessage: null,
+            hitSearch: false
         }
 
         this.checkBalance = this.checkBalance.bind(this)
@@ -29,6 +30,7 @@ class Balance extends React.Component {
 
     async checkBalance () {
         this.setState({balance: null})
+        this.setState({hitSearch: true})
         try {
             const provider = new Web3.providers.HttpProvider(gateWayUrl)
             const web3 = new Web3(provider);
@@ -39,6 +41,7 @@ class Balance extends React.Component {
             this.setState({balance:  web3.utils.fromWei(daiBalance, 'ether')})
             this.setState({errorMessage: ''})
         } catch (error) {
+            this.setState({hitSearch: false})
             const errorMessage = error.code === 'INVALID_ARGUMENT' ? 'Ensure address is valid and try again' : error.message
             this.setState({errorMessage: errorMessage})
         }
@@ -48,7 +51,7 @@ class Balance extends React.Component {
         return (
             <form>
                 {this.state.errorMessage && <div className="alert alert-danger" role="alert">{this.state.errorMessage}</div>}
-                <label htmlFor="address">Enter Wallet Address and hit search</label>
+                <label htmlFor="address">Enter Wallet Address and hit search to check balance</label>
                 <div className="input-group mb-3">
                     <input onChange={this.handleInPutChanged} id="address" type="text" className="form-control" placeholder="eg 0xd77..."
                            aria-label="Enter Wallet Address and hit search" aria-describedby="basic-addon2"/>
@@ -56,7 +59,7 @@ class Balance extends React.Component {
                             <button onClick={this.checkBalance} className="btn btn-outline-primary" type="button">Search</button>
                         </div>
                 </div>
-                {(!this.state.balance ) && <div className="d-flex justify-content-center">
+                {!this.state.balance && this.state.hitSearch && <div className="d-flex justify-content-center">
                     <div className="spinner-border" role="status">
                         <span className="visually-hidden">Loading...</span>
                     </div>
